@@ -9,12 +9,14 @@ import { reportStyles } from "./reportStyles.js";
  * @returns {string} A complete HTML document as a string.
  */
 export const generateReportHTML = (loans, summary) => {
-  // Helper to format dates
-  const getLocalDate = (d) => {
+  // --- FIX: Renamed and updated to format as MMM-YYYY ---
+  const getMonthYearFromString = (d) => {
     if (!d) return "N/A";
     const parts = d.split("-");
     const date = new Date(parts[0], parts[1] - 1, parts[2]);
-    return date.toLocaleDateString();
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    return `${month}-${year}`;
   };
 
   // --- 1. Build Loan Table Rows ---
@@ -24,7 +26,7 @@ export const generateReportHTML = (loans, summary) => {
     <tr>
       <td>${loan.lenderName}</td>
       <td class="numeric">${formatCurrency(loan.principal, loan.currency)}</td>
-      <td class="numeric">${getLocalDate(loan.startDate)}</td>
+      <td class="numeric">${getMonthYearFromString(loan.startDate)}</td>
       <td class="numeric">${(loan.yearlyRate * 100).toFixed(2)}%</td>
       <td class="numeric">${loan.monthsElapsed}</td>
       <td class="numeric">${formatCurrency(
@@ -44,7 +46,15 @@ export const generateReportHTML = (loans, summary) => {
     )
     .join("");
 
+  // --- NEW: Calculate Total Interest Paid ---
+  // This is: Total Payments - (Original Principal - Current Balance)
+  const totalInterestPaid =
+    summary.grandTotalPayments -
+    (summary.totalPrincipal - summary.totalCurrentBalance);
+
   // --- 2. Build the Full HTML Document ---
+  const generationDate = new Date().toLocaleDateString();
+
   return `
     <!DOCTYPE html>
     <html>
@@ -54,7 +64,11 @@ export const generateReportHTML = (loans, summary) => {
         <style>${reportStyles}</style>
       </head>
       <body>
-        <h1>Household Loans Summary Report</h1>
+
+        <header>
+          <h1>Household Loans Summary Report</h1>
+          <p class="subtitle">Generated on ${generationDate}</p>
+        </header>
         
         <h2>Overall Summary</h2>
         <div class="summary-grid">
@@ -70,12 +84,32 @@ export const generateReportHTML = (loans, summary) => {
               summary.grandTotalCurrentInterest
             )}</span>
           </div>
+          
           <div class="stat-box">
             <span class="stat-label">Total Current Balance</span>
             <span class="stat-value brand">${formatCurrency(
               summary.totalCurrentBalance
             )}</span>
+            
+        
+            <div class="stat-breakdown">
+              <div>
+                <span class="breakdown-label">Original Principal:</span>
+                <span class="breakdown-value">${formatCurrency(
+                  summary.totalPrincipal
+                )}</span>
+              </div>
+              <div>
+                <span class="breakdown-label">Total Interest Paid:</span>
+                <span class="breakdown-value interest-value">${formatCurrency(
+                  totalInterestPaid
+                )}</span>
+              </div>
+            </div>
+       
+
           </div>
+   
         </div>
 
         <h2>All Loans</h2>
@@ -83,19 +117,23 @@ export const generateReportHTML = (loans, summary) => {
           <thead>
             <tr>
               <th>Lender</th>
-              <th>Principal</th>
-              <th>Start Date</th>
-              <th>Rate</th>
-              <th>Months</th>
-              <th>Current Interest</th>
-              <th>Total Paid</th>
-              <th>Balance</th>
+              <th class="numeric">Principal</th>
+              <th class="numeric">Start Date</th>
+              <th class="numeric">Rate</th>
+              <th class="numeric">Months</th>
+              <th class="numeric">Current Interest</th>
+              <th class="numeric">Total Paid</th>
+              <th class="numeric">Balance</th>
             </tr>
           </thead>
           <tbody>
             ${loanRows}
           </tbody>
         </table>
+
+        <footer>
+          <p>Confidential Household Report</p>
+        </footer>
 
       </body>
     </html>

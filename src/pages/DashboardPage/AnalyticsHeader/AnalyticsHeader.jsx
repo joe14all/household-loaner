@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react'; // 1. Removed useState
 import { useLoans } from '../../../context/LoanContext';
 import { useCurrency } from '../../../context/CurrencyContext.jsx';
-// 1. Remove useCurrency, we don't format in this file anymore
-// 2. Import our new HTML generator
-import { generateReportHTML } from '../../../utils/generateReportHTML.js';
+
+// 2. Import modal hooks and the new modal component
+import { useModalState } from '../../../context/ModalContext.jsx';
+import ReportFilterModal from '../../../components/ReportFilterModal/ReportFilterModal.jsx';
+
+// 3. Removed generateReportHTML import
 import styles from './AnalyticsHeader.module.css';
 
 /**
@@ -11,22 +14,19 @@ import styles from './AnalyticsHeader.module.css';
  * high-level analytics and quick actions.
  */
 const AnalyticsHeader = () => {
-  // 3. Get ALL the data from useLoans for the report
+  // 4. Get grand totals for display only
   const { 
-    loansWithBalances,
-    totalPrincipal,
-    totalCurrentBalance,
     grandTotalPayments, 
     grandTotalCurrentInterest, 
     isLoading 
   } = useLoans();
   
-  // 4. We can now get formatCurrency from the hook in the renderStat
-  //    (Oh, wait, the stats are in LoanContext now. We DO need useCurrency.)
-  //    Re-adding useCurrency:
   const { formatCurrency } = useCurrency();
   
-  const [isGenerating, setIsGenerating] = useState(false);
+  // 5. Get modal functions
+  const { openModal, closeModal } = useModalState();
+  
+  // 6. We no longer need isGenerating state here
 
   const renderStat = (label, value, style) => (
     <div className={styles.statBox}>
@@ -37,40 +37,10 @@ const AnalyticsHeader = () => {
     </div>
   );
 
-  // 4. Make the function async
-  const handleGeneratePDF = async () => {
-    console.log("PDF Generation Requested...");
-    setIsGenerating(true);
-
-    // 5. Build the data object for the report
-    const summary = {
-      grandTotalPayments,
-      grandTotalCurrentInterest,
-      totalCurrentBalance,
-      totalPrincipal
-    };
-
-    // 6. Generate the HTML string
-    const htmlContent = generateReportHTML(loansWithBalances, summary);
-
-    try {
-      // 7. Send the HTML to Electron via the Preload API
-      const result = await window.electronAPI.generatePDF(htmlContent);
-
-      if (result.success) {
-        console.log(`PDF successfully saved to: ${result.filePath}`);
-        // We can't use alert. We'll use a console log for now.
-        // A better solution would be a modal or toast notification.
-      } else {
-        console.warn(`PDF save failed: ${result.error}`);
-      }
-
-    } catch (error) {
-      console.error("Error invoking PDF generation:", error);
-      // This is a more serious error (e.g., preload script failed)
-    } finally {
-      setIsGenerating(false);
-    }
+  // 7. This function now just opens the modal
+  const handleOpenReportModal = () => {
+    // Pass 'closeModal' as a prop so the modal can close itself
+    openModal(<ReportFilterModal onClose={closeModal} />);
   };
 
   return (
@@ -89,14 +59,15 @@ const AnalyticsHeader = () => {
         styles.info
       )}
 
-      {/* 5. Add the new Action Button as the third item in the grid */}
+      {/* 8. Button now opens the modal */}
       <div className={styles.actionButtonBox}>
         <button 
           className={styles.actionButton}
-          onClick={handleGeneratePDF}
-          disabled={isGenerating || isLoading} // Also disable if loans are loading
+          onClick={handleOpenReportModal} // <-- CHANGED
+          disabled={isLoading} // <-- CHANGED
         >
-          {isGenerating ? 'Generating...' : 'Generate PDF Report'}
+          {/* Text remains the same, but the action is different */}
+          Generate PDF Report
         </button>
       </div>
     </section>

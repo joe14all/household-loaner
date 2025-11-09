@@ -1,4 +1,4 @@
-// main.js
+// main.cjs
 const { app, BrowserWindow, ipcMain, dialog } = require("electron"); // 1. Add ipcMain and dialog
 const path = require("path");
 const fs = require("fs");
@@ -16,7 +16,6 @@ function createWindow() {
       nodeIntegration: false,
     },
   });
-
   // Load the React app.
   // In development, we load from the Vite dev server.
   // In production, we load the built 'index.html' file.
@@ -30,7 +29,6 @@ function createWindow() {
   }
 }
 
-// --- ADD THIS ENTIRE BLOCK ---
 /**
  * Handles the 'generate-pdf' request from the React app.
  */
@@ -53,11 +51,30 @@ ipcMain.handle("generate-pdf", async (event, htmlContent) => {
 
   // 3. Generate the PDF from the HTML
   try {
-    const pdfData = await window.webContents.printToPDF({
-      marginsType: 0, // No margins
+    // --- FIX START: Correct PDF Generation ---
+    // We create a new, hidden window to load our HTML into.
+    const pdfWindow = new BrowserWindow({
+      show: false,
+      webPreferences: {
+        contextIsolation: false, // Keep it simple for loading string content
+      },
+    });
+
+    // Load the HTML content from React as a data URL
+    await pdfWindow.loadURL(
+      `data:text/html;charset=UTF-8,${encodeURIComponent(htmlContent)}`
+    );
+
+    // Print *this hidden window's* contents to PDF
+    const pdfData = await pdfWindow.webContents.printToPDF({
+      marginsType: 0,
       printBackground: true,
       pageSize: "A4",
     });
+
+    // Close the hidden window
+    pdfWindow.close();
+    // --- FIX END ---
 
     // 4. Write the file to disk
     fs.writeFileSync(filePath, pdfData);
@@ -79,7 +96,6 @@ app.whenReady().then(() => {
     }
   });
 });
-
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();

@@ -4,7 +4,15 @@
   width: 100%;
 }
 
-/* ADDED: Styles for the new back button */
+/* --- NEW: Container for top buttons --- */
+.pageActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* --- UPDATED: Removed margin-bottom --- */
 .backButton {
   display: inline-flex;
   align-items: center;
@@ -12,7 +20,7 @@
   border: 1px solid var(--color-ui-2);
   color: var(--color-dark-2);
   padding: var(--spacing-sm) var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+  /* margin-bottom: var(--spacing-lg); <-- REMOVED */
   border-radius: var(--border-radius-sm);
   font-size: 0.875rem;
   font-weight: 500;
@@ -24,6 +32,32 @@
   background-color: var(--color-light-3);
   color: var(--color-dark-1);
 }
+
+/* --- NEW: Style for the report button --- */
+.reportButton {
+  padding: 8px 16px; /* Slightly smaller than main add button */
+  font-size: 0.875rem; /* Match back button */
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  background-color: var(--color-brand);
+  color: var(--color-light-1);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reportButton:hover {
+  background-color: var(--color-brand-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.reportButton:disabled {
+  background-color: var(--color-dark-3);
+  cursor: wait;
+}
+/* --- END NEW --- */
+
 
 .loading,
 .error {
