@@ -1,0 +1,75 @@
+/* src/pages/DashboardPage/AnalyticsHeader/AnalyticsHeader.module.css */
+
+.statsGrid {
+  display: grid;
+  /* Updated to better fit 2 stats and 1 button */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-md);
+  background-color: var(--color-light-1);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--color-ui-1);
+}
+
+.statLabel {
+  font-size: 0.875rem; /* 14px */
+  color: var(--color-dark-3);
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-sm);
+}
+
+.statValue {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  color: var(--color-dark-1);
+  font-family: var(--font-family-mono);
+}
+
+/* Color overrides from App.css */
+.positive {
+  color: var(--color-positive);
+}
+
+.info {
+  color: var(--color-info);
+}
+
+/* --- NEW STYLES FOR THE ACTION BUTTON --- */
+
+.actionButtonBox {
+  /* This box will fill the grid cell */
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.actionButton {
+  flex-grow: 1; /* Make button fill the box */
+  padding: var(--spacing-md);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  background-color: var(--color-brand);
+  color: var(--color-light-1);
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.actionButton:hover {
+  background-color: var(--color-brand-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.actionButton:disabled {
+  background-color: var(--color-dark-3);
+  cursor: wait;
+}

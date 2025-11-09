@@ -1,23 +1,28 @@
 import React from 'react';
-
-// Import our main Layout and the new AppRouter
+// 1. Import hook from the ModalContext
+import { useModalState } from './context/ModalContext.jsx'; 
+import Modal from './components/Modal/Modal.jsx';
 import Layout from './components/Layout/Layout.jsx';
 import AppRouter from './router/AppRouter.jsx';
-
-// Import our new global styles
 import './App.css';
 
 function App() {
+  // 2. Get modal state from our new hook
+  const { isModalOpen, closeModal, modalContent } = useModalState();
+
   return (
-    <Layout>
-      {/* The Layout component (which we'll build next) 
-        will render our Sidebar and main content area.
-        
-        AppRouter will swap the correct page
-        into that main content area.
+    <> {/* Use a fragment to render Modal alongside Layout */}
+      <Layout>
+        <AppRouter />
+      </Layout>
+      
+      {/* 3. This is the global modal renderer.
+           If this code isn't here, the modal will never appear.
       */}
-      <AppRouter />
-    </Layout>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {modalContent}
+      </Modal>
+    </>
   );
 }
 

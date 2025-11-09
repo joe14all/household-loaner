@@ -1,14 +1,12 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Import all our Page components
+// 1. Remove AddLoanPage import
 import DashboardPage from '../pages/DashboardPage/DashboardPage.jsx';
 import LoanDetailPage from '../pages/LoanDetailPage/LoanDetailPage.jsx';
-import AddLoanPage from '../pages/AddLoanPage/AddLoanPage.jsx';
 
 /**
  * Central hub for all application routes.
- * This component is rendered by App.jsx
  */
 const AppRouter = () => {
   return (
@@ -25,15 +23,8 @@ const AppRouter = () => {
         element={<LoanDetailPage />} 
       />
 
-      {/* Route 3: The "Add New Loan" Page */}
-      <Route 
-        path="/add-loan" 
-        element={<AddLoanPage />} 
-      />
+      {/* 2. Removed the /add-loan route */}
 
-      {/* Future routes (like Settings, etc.) would go here.
-        <Route path="/settings" element={<SettingsPage />} /> 
-      */}
     </Routes>
   );
 };

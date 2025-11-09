@@ -1,0 +1,75 @@
+/* src/pages/LoanDetailPage/AmortizationTable/AmortizationTable.module.css */
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-ui-1);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.amortizationTable {
+  width: 100%;
+  min-width: 800px; /* Ensure table is wide enough for all columns */
+  border-collapse: collapse;
+}
+
+.amortizationTable th,
+.amortizationTable td {
+  padding: var(--spacing-md);
+  text-align: left;
+  border-bottom: 1px solid var(--color-ui-1);
+  white-space: nowrap; /* Prevent numbers from wrapping */
+}
+
+.amortizationTable th {
+  background-color: var(--color-light-2);
+  color: var(--color-dark-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Add row striping for readability */
+.amortizationTable tbody tr:nth-child(even) {
+  background-color: var(--color-light-3);
+}
+
+.amortizationTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.monthCell {
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-dark-2);
+}
+
+/* Right-align all numeric data */
+.numericCell {
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-size: 0.95rem;
+}
+
+.paymentCell {
+  color: var(--color-positive);
+  font-weight: 600;
+}
+
+.closingBalanceCell {
+  font-weight: 700;
+  color: var(--color-brand);
+  background-color: rgba(0, 122, 255, 0.05);
+}
+
+.emptyState {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-dark-3);
+  font-size: 1.125rem;
+  background-color: var(--color-light-2);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-lg);
+}

@@ -1,11 +1,13 @@
-// preload.js
+// preload.cjs
 const { contextBridge, ipcRenderer } = require("electron");
 
-// We are exposing a secure API to the "renderer" process (our React app)
-// This is a good practice for security.
-// For now, it's empty, but you would add functions here
-// to interact with the OS (e.g., save files, show dialogs).
 contextBridge.exposeInMainWorld("electronAPI", {
-  // Example:
-  // showSaveDialog: (data) => ipcRenderer.invoke('dialog:save', data)
+  // --- ADD THIS FUNCTION ---
+  /**
+   * Invokes the 'generate-pdf' channel in the main process.
+   * @param {string} htmlContent The complete HTML string to print to PDF.
+   * @returns {Promise<object>} A promise that resolves with { success: true, filePath: '...' } or { success: false, error: '...' }
+   */
+  generatePDF: (htmlContent) => ipcRenderer.invoke("generate-pdf", htmlContent),
+  // --- END ---
 });

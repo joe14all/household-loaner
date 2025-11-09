@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Layout.module.css';
-import Sidebar from '../Sidebar/Sidebar.jsx'; // We will create this component next
+
 
 /**
  * The main application layout.
@@ -11,7 +11,6 @@ import Sidebar from '../Sidebar/Sidebar.jsx'; // We will create this component n
 const Layout = ({ children }) => {
   return (
     <div className={styles.layoutContainer}>
-      <Sidebar />
       <main className={styles.mainContent}>
         {children}
       </main>

@@ -1,8 +1,7 @@
-// src/db/calculations.js
-
 /**
  * Generates the full monthly amortization schedule for a loan.
- * Replicates the logic from your Excel sheets.
+ * This version applies interest consistently from month one.
+ * It calculates up to, but NOT including, the current month.
  *
  * @param {object} loan - The loan object from Dexie (e.g., { id, principal, yearlyRate, startDate, ... }).
  * @param {array} payments - An array of payment objects from Dexie (e.g., [{ id, loanId, paymentDate, paymentAmount }, ...]).
@@ -11,7 +10,6 @@
 export function calculateMonthlyAmortization(loan, payments) {
   const schedule = [];
 
-  // Handle empty or invalid loan
   if (
     !loan ||
     typeof loan.yearlyRate !== "number" ||
@@ -23,16 +21,24 @@ export function calculateMonthlyAmortization(loan, payments) {
 
   const monthlyRate = loan.yearlyRate / 12;
 
-  let currentDate = new Date(loan.startDate);
+  // --- TIME ZONE FIX ---
+  // '2019-06-01' is treated as '2019-05-31TXX:XX:XX' (local) because JS parses it as UTC.
+  // We must parse it as local time by splitting the string.
+  const dateParts = loan.startDate.split("-"); // [ "2019", "06", "01" ]
+  // new Date(year, monthIndex (0-11), day)
+  let currentDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
   // Set to the first day of the month to normalize calculations
   currentDate.setDate(1);
 
   let openingBalance = loan.principal;
   const today = new Date();
 
-  // We loop until the month *after* the current one.
-  // This ensures we include the current, active month.
-  const endOfLoop = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  // --- LOGIC FIX ---
+  // The loop should stop *before* the current month.
+  // If today is 2025-10-09 (October), we want the loop to stop when currentDate hits 2025-10-01.
+  // So, endOfLoop is the first day of the *current* month.
+  const endOfLoop = new Date(today.getFullYear(), today.getMonth(), 1);
 
   let monthNumber = 1;
 
@@ -42,6 +48,7 @@ export function calculateMonthlyAmortization(loan, payments) {
 
     // 1. Find all payments for this specific month
     const paymentsThisMonth = payments.filter((p) => {
+      // Ensure paymentDate is treated as local time
       const paymentDate = new Date(p.paymentDate);
       return (
         paymentDate.getMonth() === month && paymentDate.getFullYear() === year
@@ -58,24 +65,18 @@ export function calculateMonthlyAmortization(loan, payments) {
     const interestForMonth = openingBalance * monthlyRate;
 
     // 4. Calculate the "Debt" (Balance before payments)
-    // This matches the "Debt ( Intrest+ prime) ($)" column
     const debt = openingBalance + interestForMonth;
 
     // 5. Calculate the closing balance
-    // This matches the "Balance ( Debt- Payment ) ($)" column
     const closingBalance = debt - totalPaymentsForMonth;
 
     // Add this month's data to our schedule
     schedule.push({
       monthNumber: monthNumber,
-      // The "End of Month" date (e.g., June 30th)
       periodDate: new Date(year, month + 1, 0),
-      // "Previous month balance ($)"
       openingBalance: openingBalance,
-      // "Monthly intrest ($)"
       monthlyInterest: interestForMonth,
       debt: debt,
-      // "Payment done by Joe ($)"
       monthlyPayments: totalPaymentsForMonth,
       closingBalance: closingBalance,
     });

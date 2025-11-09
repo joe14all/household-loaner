@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// 1. Remove useNavigate
 import styles from './LoanForm.module.css';
 import { addNewLoan } from '../../../db/loans';
 import { useLoans } from '../../../context/LoanContext';
 
-const LoanForm = () => {
+// 2. Accept 'onClose' as a prop
+const LoanForm = ({ onClose }) => {
   const [lenderName, setLenderName] = useState('');
   const [principal, setPrincipal] = useState('');
   const [yearlyRate, setYearlyRate] = useState('');
@@ -13,7 +14,7 @@ const LoanForm = () => {
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
 
-  const navigate = useNavigate();
+  // 3. Remove navigate
   const { refreshLoans } = useLoans();
 
   const handleSubmit = async (e) => {
@@ -37,12 +38,11 @@ const LoanForm = () => {
       setError('Interest rate must be a positive number.');
       return;
     }
-
-    // --- Prepare Data for DB ---
+    
+    // Convert to decimal for storage
     const loanData = {
       lenderName,
       principal: principalAmount,
-      // Convert user input (e.g., 4%) to decimal (0.04) for calculations
       yearlyRate: ratePercent / 100, 
       startDate,
       currency,
@@ -50,14 +50,11 @@ const LoanForm = () => {
     };
 
     try {
-      // --- Save to DB ---
       await addNewLoan(loanData);
-      
-      // --- Refresh global state ---
       await refreshLoans();
       
-      // --- Redirect to dashboard ---
-      navigate('/');
+      // 4. Call onClose() on success
+      onClose();
       
     } catch (dbError) {
       console.error("Failed to save loan:", dbError);
@@ -68,10 +65,9 @@ const LoanForm = () => {
   return (
     <form onSubmit={handleSubmit} className={styles.loanForm}>
       
-      {/* Form-level error message */}
-      {error && <div className={styles.formError}>{error}</div>}
+      {error && <p className={styles.formError}>{error}</p>}
 
-      {/* Form Group: Lender Name */}
+      {/* --- Form Fields --- */}
       <div className={styles.formGroup}>
         <label htmlFor="lenderName">Lender Name</label>
         <input
@@ -83,7 +79,6 @@ const LoanForm = () => {
         />
       </div>
 
-      {/* Form Row: Principal & Currency */}
       <div className={styles.formRow}>
         <div className={`${styles.formGroup} ${styles.grow}`}>
           <label htmlFor="principal">Principal Amount</label>
@@ -114,7 +109,6 @@ const LoanForm = () => {
         </div>
       </div>
 
-      {/* Form Row: Rate & Start Date */}
       <div className={styles.formRow}>
         <div className={styles.formGroup}>
           <label htmlFor="yearlyRate">Yearly Interest Rate (%)</label>
@@ -139,7 +133,6 @@ const LoanForm = () => {
         </div>
       </div>
 
-      {/* Form Group: Description */}
       <div className={styles.formGroup}>
         <label htmlFor="description">Description (Optional)</label>
         <textarea
@@ -159,7 +152,8 @@ const LoanForm = () => {
         <button 
           type="button" 
           className={styles.cancelButton}
-          onClick={() => navigate('/')} // Go back to dashboard
+          // 5. Call onClose() on cancel
+          onClick={onClose}
         >
           Cancel
         </button>

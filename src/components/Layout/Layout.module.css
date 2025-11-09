@@ -1,22 +1,18 @@
 /* src/components/Layout/Layout.module.css */
 
 .layoutContainer {
-  display: flex;
   width: 100vw;
   height: 100vh;
   /* Use the main app background color from App.css */
   background-color: var(--color-light-2); 
-  overflow: hidden; /* Prevent full-page scroll */
 }
 
 .mainContent {
-  flex-grow: 1;
-  /* Use the main content background color */
+  /* No more flex-grow needed */
   background-color: var(--color-light-1);
   height: 100vh;
   overflow-y: auto; /* Allow content area to scroll */
   padding: var(--spacing-xl);
-  
-  /* Simple transition for page loads */
-  transition: background-color 0.3s ease;
+
+  margin: 0 auto;
 }

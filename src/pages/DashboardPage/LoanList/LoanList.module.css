@@ -29,6 +29,16 @@
   text-transform: uppercase;
 }
 
+/* NEW: Right-align numeric headers */
+.numericHeader {
+  text-align: right;
+}
+
+/* NEW: Center priority header */
+.priorityHeader {
+  text-align: center;
+}
+
 .loanTable tbody tr {
   transition: background-color 0.2s ease;
   cursor: pointer;
@@ -47,10 +57,50 @@
   color: var(--color-dark-1);
 }
 
+/* NEW: Right-align numeric cells */
+.numericCell {
+  text-align: right;
+  font-family: var(--font-family-mono);
+}
+
+/* --- NEW STYLE FOR INTEREST CELL --- */
+.interestCell {
+  color: var(--color-info);
+  font-weight: 500;
+}
+/* --- END NEW STYLE --- */
+
+.totalPaidCell {
+  color: var(--color-positive);
+  font-weight: 500;
+}
+
 .balanceCell {
   font-weight: 600;
   color: var(--color-brand);
+  text-align: right; /* Ensure this is also right-aligned */
+  font-family: var(--font-family-mono); /* Add for consistency */
 }
+
+/* NEW: Styles for the priority marker */
+.priorityCell {
+  text-align: center;
+}
+
+/* --- UPDATED: Replaced .priorityMarker with .priorityTag --- */
+.priorityTag {
+  display: inline-block;
+  font-size: 0.75rem; /* 12px */
+  font-weight: 700;
+  font-family: var(--font-family-sans); /* Use standard font */
+  padding: 4px 8px;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-warning);
+  color: var(--color-dark-1); /* Dark text on yellow bg */
+  text-transform: uppercase;
+  line-height: 1;
+}
+
 
 /* --- States --- */
 .loading,
@@ -101,5 +151,11 @@
     text-align: left;
     font-weight: 600;
     color: var(--color-dark-2);
+  }
+
+  /* Right-align all numeric cells on mobile */
+  .loanTable td.numericCell,
+  .loanTable td.balanceCell {
+    text-align: right;
   }
 }

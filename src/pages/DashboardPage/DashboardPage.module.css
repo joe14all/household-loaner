@@ -4,8 +4,48 @@
   width: 100%;
 }
 
+/* NEW: Flex container for title and button */
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
 .pageTitle {
   font-size: 2rem; /* 32px */
   color: var(--color-dark-1);
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: 0; /* Let the header handle the margin */
+}
+
+/* NEW: Styles for the "Add New Loan" button */
+.addButton {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  background-color: var(--color-brand);
+  color: var(--color-light-1);
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.addButton:hover {
+  background-color: var(--color-brand-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Responsive style for small screens */
+@media (max-width: 480px) {
+  .pageHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .pageTitle {
+    text-align: center;
+  }
 }

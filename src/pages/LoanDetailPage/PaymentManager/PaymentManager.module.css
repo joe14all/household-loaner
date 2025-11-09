@@ -1,0 +1,150 @@
+/* src/pages/LoanDetailPage/PaymentManager/PaymentManager.module.css */
+
+.managerContainer {
+  width: 100%;
+  display: grid;
+  /* Create two columns, but let them stack on smaller screens */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-ui-1);
+}
+
+.formContainer,
+.listContainer {
+  background-color: var(--color-light-2);
+  border: 1px solid var(--color-ui-1);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-dark-1);
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-ui-1);
+}
+
+/* --- Form Styles --- */
+.paymentForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.formGroup label {
+  font-weight: 500;
+  color: var(--color-dark-2);
+}
+
+.formGroup input {
+  padding: 10px;
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  border: 1px solid var(--color-ui-2);
+  border-radius: var(--border-radius-sm);
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.addButton {
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  background-color: var(--color-positive);
+  color: var(--color-light-1);
+  transition: all 0.2s ease;
+}
+
+.addButton:hover {
+  filter: brightness(1.1);
+  box-shadow: var(--shadow-sm);
+}
+
+.formError {
+  color: var(--color-negative);
+  font-size: 0.875rem;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+/* --- List Styles --- */
+.emptyList {
+  text-align: center;
+  color: var(--color-dark-3);
+  padding: var(--spacing-md) 0;
+}
+
+.paymentList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  max-height: 400px; /* Give the list a max height */
+  overflow-y: auto;
+}
+
+.paymentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-ui-1);
+}
+
+.paymentItem:last-child {
+  border-bottom: none;
+}
+
+.paymentInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.paymentAmount {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-dark-1);
+  font-family: var(--font-family-mono);
+}
+
+.paymentDate {
+  font-size: 0.875rem;
+  color: var(--color-dark-3);
+}
+
+.deleteButton {
+  background-color: transparent;
+  border: none;
+  color: var(--color-negative);
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 var(--spacing-sm);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--color-negative);
+}

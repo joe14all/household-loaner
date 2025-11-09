@@ -1,6 +1,7 @@
 // main.js
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron"); // 1. Add ipcMain and dialog
 const path = require("path");
+const fs = require("fs");
 
 function createWindow() {
   // Create the browser window.
@@ -28,6 +29,46 @@ function createWindow() {
     mainWindow.webContents.openDevTools();
   }
 }
+
+// --- ADD THIS ENTIRE BLOCK ---
+/**
+ * Handles the 'generate-pdf' request from the React app.
+ */
+ipcMain.handle("generate-pdf", async (event, htmlContent) => {
+  // 1. Get the window that sent the request
+  const window = BrowserWindow.getFocusedWindow();
+
+  // 2. Show the "Save As..." dialog
+  const { canceled, filePath } = await dialog.showSaveDialog(window, {
+    title: "Save Report as PDF",
+    defaultPath: `household-loans-report-${
+      new Date().toISOString().split("T")[0]
+    }.pdf`,
+    filters: [{ name: "PDF Documents", extensions: ["pdf"] }],
+  });
+
+  if (canceled || !filePath) {
+    return { success: false, error: "Save was canceled." };
+  }
+
+  // 3. Generate the PDF from the HTML
+  try {
+    const pdfData = await window.webContents.printToPDF({
+      marginsType: 0, // No margins
+      printBackground: true,
+      pageSize: "A4",
+    });
+
+    // 4. Write the file to disk
+    fs.writeFileSync(filePath, pdfData);
+
+    return { success: true, filePath };
+  } catch (error) {
+    console.error("Failed to generate PDF:", error);
+    return { success: false, error: error.message };
+  }
+});
+// --- END NEW BLOCK ---
 
 app.whenReady().then(() => {
   createWindow();
