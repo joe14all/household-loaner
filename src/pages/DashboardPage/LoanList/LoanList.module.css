@@ -1,0 +1,105 @@
+/* src/pages/DashboardPage/LoanList/LoanList.module.css */
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto; /* Allow horizontal scroll on small screens */
+  background-color: var(--color-light-1);
+  border: 1px solid var(--color-ui-1);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.loanTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.loanTable th,
+.loanTable td {
+  padding: var(--spacing-md) var(--spacing-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--color-ui-1);
+}
+
+.loanTable th {
+  background-color: var(--color-light-2);
+  color: var(--color-dark-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.loanTable tbody tr {
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.loanTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.loanTable tbody tr:hover {
+  background-color: var(--color-light-3);
+}
+
+.lenderCell {
+  font-weight: 600;
+  color: var(--color-dark-1);
+}
+
+.balanceCell {
+  font-weight: 600;
+  color: var(--color-brand);
+}
+
+/* --- States --- */
+.loading,
+.emptyState {
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--color-dark-3);
+  font-size: 1.125rem;
+}
+
+.emptyState h2 {
+  font-size: 1.5rem;
+  color: var(--color-dark-1);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+  .loanTable thead {
+    /* Hide table headers on mobile */
+    display: none;
+  }
+
+  .loanTable tr {
+    display: block;
+    margin-bottom: var(--spacing-md);
+    border: 1px solid var(--color-ui-1);
+    border-radius: var(--border-radius-sm);
+  }
+  
+  .loanTable td {
+    display: block;
+    text-align: right; /* Right-align the content */
+    padding-left: 120px; /* Space for the label */
+    position: relative;
+    border-bottom: 1px dashed var(--color-ui-1);
+  }
+
+  .loanTable td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add data labels (like "Lender:", "Principal:") */
+  .loanTable td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-dark-2);
+  }
+}

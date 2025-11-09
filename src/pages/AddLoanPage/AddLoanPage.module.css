@@ -1,0 +1,19 @@
+/* src/pages/AddLoanPage/AddLoanPage.module.css */
+
+.pageContainer {
+  width: 100%;
+  max-width: 900px; /* Give the page a max width */
+  margin: 0 auto; /* Center the page content */
+}
+
+.pageTitle {
+  font-size: 2rem; /* 32px */
+  color: var(--color-dark-1);
+  margin-bottom: var(--spacing-sm);
+}
+
+.pageSubtitle {
+  font-size: 1.125rem; /* 18px */
+  color: var(--color-dark-3);
+  margin-bottom: var(--spacing-xl);
+}

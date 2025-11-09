@@ -1,0 +1,122 @@
+/* src/App.css
+  This file contains our global styles and color palette.
+*/
+
+/* 1. CSS Color & Style Variables 
+  We define our "design system" here.
+*/
+:root {
+  /* Font Families */
+  --font-family-sans: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family-mono: 'Menlo', 'Courier New', monospace;
+
+  /*
+    Core Color Palette:
+    We'll use a modern, clean, financial-app-style palette.
+    - Dark for text & high-contrast elements.
+    - Light for backgrounds.
+    - Brand for primary actions.
+    - Muted for borders, secondary text, and UI.
+  */
+  
+  /* Primary Brand Color (e.g., a strong, trustworthy blue) */
+  --color-brand: #007aff;
+  --color-brand-hover: #0056b3;
+  
+  /* Dark Tones (for text, headings, icons) */
+  --color-dark-1: #1a1a1a; /* Primary text */
+  --color-dark-2: #404040; /* Secondary text */
+  --color-dark-3: #5c5c5c; /* Tertiary/Muted text */
+
+  /* Light Tones (for backgrounds) */
+  --color-light-1: #ffffff; /* Main content background */
+  --color-light-2: #f8f9fa; /* App background / Sidebar */
+  --color-light-3: #f1f3f5; /* Subtle hover background */
+  
+  /* UI Tones (for borders, inputs, cards) */
+  --color-ui-1: #e9ecef; /* Default border */
+  --color-ui-2: #dee2e6; /* Input border */
+  --color-ui-3: #ced4da; /* Input border (focus) */
+
+  /* Semantic Colors */
+  --color-positive: #28a745;
+  --color-negative: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+
+  /* Spacing & Layout */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Borders & Shadows */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Global Styles & Resets
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-dark-1);
+  background-color: var(--color-light-2);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  /* Disables the "pull to refresh" and overscroll bounce */
+  overscroll-behavior: none;
+}
+
+/* Remove default padding/margin from common elements */
+h1, h2, h3, h4, h5, h6, p, ul, ol {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+a {
+  color: var(--color-brand);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-brand-hover);
+}
+
+/* 3. Utility Classes (Optional but helpful)
+  These can be used in any component for quick styling.
+*/
+
+.text-muted {
+  color: var(--color-dark-3);
+}
+
+.text-positive {
+  color: var(--color-positive);
+}
+
+.text-negative {
+  color: var(--color-negative);
+}
+
+/* We'll remove all the old .logo, .card, etc. styles as they
+   are part of the Vite demo and not our application. 
+   Our new components will use CSS Modules. */

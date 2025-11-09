@@ -1,0 +1,11 @@
+/* src/pages/DashboardPage/DashboardPage.module.css */
+
+.pageContainer {
+  width: 100%;
+}
+
+.pageTitle {
+  font-size: 2rem; /* 32px */
+  color: var(--color-dark-1);
+  margin-bottom: var(--spacing-xl);
+}
