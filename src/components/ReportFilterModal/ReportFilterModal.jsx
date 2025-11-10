@@ -53,7 +53,7 @@ const ReportFilterModal = ({ onClose }) => {
   const handleGenerate = async () => {
     setIsGenerating(true);
 
-    // 1. Parse all filter values (same as before)
+    // 1. Parse all filter values
     const lender = filters.lender;
     const balanceMin = parseFloat(filters.balanceMin) || 0;
     const balanceMax = parseFloat(filters.balanceMax) || Infinity;
@@ -64,7 +64,7 @@ const ReportFilterModal = ({ onClose }) => {
     const dateFrom = filters.dateFrom ? new Date(filters.dateFrom) : null;
     const dateTo = filters.dateTo ? new Date(filters.dateTo) : null;
 
-    // 2. Filter the loans based on all criteria (same as before)
+    // 2. Filter the loans based on all criteria
     const filteredLoans = loansWithBalances.filter((loan) => {
       const lenderMatch = lender === 'ALL' || loan.lenderName === lender;
       const balanceMatch =
@@ -74,6 +74,7 @@ const ReportFilterModal = ({ onClose }) => {
       const monthsMatch =
         loan.monthsElapsed >= monthsMin && loan.monthsElapsed <= monthsMax;
       
+      // Parse loan start date (handling local date string)
       const parts = loan.startDate.split('-');
       const loanStartDate = new Date(parts[0], parts[1] - 1, parts[2]);
 
@@ -90,7 +91,7 @@ const ReportFilterModal = ({ onClose }) => {
       );
     });
 
-    // 3. Recalculate summary (same as before)
+    // 3. Recalculate summaries based *only* on the filtered loans
     const summary = filteredLoans.reduce(
       (acc, loan) => {
         acc.grandTotalPayments += loan.totalPayments;
@@ -118,6 +119,7 @@ const ReportFilterModal = ({ onClose }) => {
       const detailHtmlParts = [];
       for (const loan of filteredLoans) {
         // We must fetch the full schedule data for each loan
+        // (This data is not in LoanContext, we must get it from the DB)
         const payments = await getPaymentsForLoan(loan.id);
         const schedule = calculateMonthlyAmortization(loan, payments);
         const currentBalance = loan.currentBalance; // We already have this

@@ -44,6 +44,16 @@ export const getLoanById = (id) => {
 };
 
 /**
+ * Updates an existing loan.
+ * @param {number} id - The primary key of the loan to update.
+ * @param {object} loanData - The new loan data.
+ * @returns {Promise<number>} The number of items updated (should be 1).
+ */
+export const updateLoan = (id, loanData) => {
+  return db.loans.update(id, loanData);
+};
+
+/**
  * Deletes a loan AND all its associated payments.
  * @param {number} loanId - The ID of the loan to delete.
  */

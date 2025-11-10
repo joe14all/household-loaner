@@ -1,7 +1,9 @@
-// main.cjs
-const { app, BrowserWindow, ipcMain, dialog } = require("electron"); // 1. Add ipcMain and dialog
+// joe14all/household-loaner/household-loaner-d4a799fe0b2a9d6009f5360658e5a0a0f724fc41/main.cjs
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fs = require("fs");
+// --- NEW IMPORT NEEDED FOR ROBUST FILE PATHS ---
+const url = require("url");
 
 function createWindow() {
   // Create the browser window.
@@ -20,8 +22,14 @@ function createWindow() {
   // In development, we load from the Vite dev server.
   // In production, we load the built 'index.html' file.
   if (app.isPackaged) {
-    // 'build' is the default output folder for 'npm run build'
-    mainWindow.loadFile(path.join(__dirname, "dist/index.html"));
+    // --- FIX: Use loadURL with file protocol for robustness ---
+    // 1. Construct the path robustly
+    const indexPath = path.join(__dirname, "dist", "index.html");
+    // 2. Convert the file path to a file:// URL string
+    const startUrl = url.pathToFileURL(indexPath).href;
+    // 3. Use loadURL, which is generally more reliable for packaged apps
+    mainWindow.loadURL(startUrl);
+    // --- END FIX ---
   } else {
     mainWindow.loadURL("http://localhost:5173");
     // Open the DevTools.
@@ -51,7 +59,6 @@ ipcMain.handle("generate-pdf", async (event, htmlContent) => {
 
   // 3. Generate the PDF from the HTML
   try {
-    // --- FIX START: Correct PDF Generation ---
     // We create a new, hidden window to load our HTML into.
     const pdfWindow = new BrowserWindow({
       show: false,
@@ -74,7 +81,6 @@ ipcMain.handle("generate-pdf", async (event, htmlContent) => {
 
     // Close the hidden window
     pdfWindow.close();
-    // --- FIX END ---
 
     // 4. Write the file to disk
     fs.writeFileSync(filePath, pdfData);
@@ -85,7 +91,6 @@ ipcMain.handle("generate-pdf", async (event, htmlContent) => {
     return { success: false, error: error.message };
   }
 });
-// --- END NEW BLOCK ---
 
 app.whenReady().then(() => {
   createWindow();

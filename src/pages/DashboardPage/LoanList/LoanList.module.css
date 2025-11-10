@@ -159,3 +159,68 @@
     text-align: right;
   }
 }
+
+.actionHeader {
+  width: 1%; /* Collapse column width */
+  white-space: nowrap;
+}
+
+.actionCell {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+  justify-content: flex-end;
+  /* Override padding for smaller buttons */
+  padding: var(--spacing-sm); 
+}
+
+.actionButton {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.editButton {
+  background-color: var(--color-info);
+  color: var(--color-light-1);
+}
+
+.editButton:hover {
+  background-color: var(--color-brand);
+  box-shadow: var(--shadow-sm);
+}
+
+.deleteButton {
+  background-color: var(--color-negative);
+  color: var(--color-light-1);
+}
+
+.deleteButton:hover {
+  filter: brightness(1.2);
+  box-shadow: var(--shadow-sm);
+}
+/* --- END NEW --- */
+
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+  /* ... existing mobile styles ... */
+
+  /* Make Action Cell display normally as the last block element */
+  .loanTable td.actionCell {
+    border-bottom: none;
+    justify-content: center;
+    padding-left: var(--spacing-md); /* Reset padding for center alignment */
+  }
+
+  .loanTable tr .actionCell:last-child {
+    border-bottom: none;
+  }
+  
+  /* ... rest of the media query ... */
+}

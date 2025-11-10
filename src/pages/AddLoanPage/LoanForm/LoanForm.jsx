@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-// 1. Remove useNavigate
 import styles from './LoanForm.module.css';
-import { addNewLoan } from '../../../db/loans';
+import { addNewLoan, updateLoan } from '../../../db/loans'; // Import updateLoan
 import { useLoans } from '../../../context/LoanContext';
 
-// 2. Accept 'onClose' as a prop
-const LoanForm = ({ onClose }) => {
-  const [lenderName, setLenderName] = useState('');
-  const [principal, setPrincipal] = useState('');
-  const [yearlyRate, setYearlyRate] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [currency, setCurrency] = useState('USD');
-  const [description, setDescription] = useState('');
+// 2. Accept 'onClose' and 'initialLoan' as props
+const LoanForm = ({ onClose, initialLoan }) => {
+  const isEditing = !!initialLoan && !!initialLoan.id;
+
+  // State initialization uses initialLoan if available
+  const [lenderName, setLenderName] = useState(initialLoan?.lenderName || '');
+  // Convert number to string for input value
+  const [principal, setPrincipal] = useState(initialLoan?.principal?.toString() || '');
+  // Convert decimal rate (0.04) to percentage string (4.00)
+  const [yearlyRate, setYearlyRate] = useState(initialLoan?.yearlyRate ? (initialLoan.yearlyRate * 100).toFixed(2) : '');
+  const [startDate, setStartDate] = useState(initialLoan?.startDate || '');
+  const [currency, setCurrency] = useState(initialLoan?.currency || 'USD');
+  const [description, setDescription] = useState(initialLoan?.description || '');
   const [error, setError] = useState('');
 
-  // 3. Remove navigate
   const { refreshLoans } = useLoans();
 
   const handleSubmit = async (e) => {
@@ -50,10 +53,16 @@ const LoanForm = ({ onClose }) => {
     };
 
     try {
-      await addNewLoan(loanData);
-      await refreshLoans();
+      // --- Conditional save logic (Add vs. Update) ---
+      if (isEditing) {
+        // Use updateLoan for existing loan
+        await updateLoan(initialLoan.id, loanData);
+      } else {
+        // Use addNewLoan for new loan
+        await addNewLoan(loanData);
+      }
       
-      // 4. Call onClose() on success
+      await refreshLoans();
       onClose();
       
     } catch (dbError) {
@@ -62,12 +71,18 @@ const LoanForm = ({ onClose }) => {
     }
   };
 
+  const submitButtonText = isEditing ? 'Save Changes' : 'Save Loan';
+  const formTitle = isEditing ? `Edit Loan: ${initialLoan.lenderName}` : 'Add a New Loan';
+
   return (
     <form onSubmit={handleSubmit} className={styles.loanForm}>
       
+      {/* --- NEW: Display Form Title inside the form --- */}
+      <h2 className={styles.formHeader}>{formTitle}</h2> 
+      
       {error && <p className={styles.formError}>{error}</p>}
 
-      {/* --- Form Fields --- */}
+      {/* --- Form Fields (remain unchanged, use state variables) --- */}
       <div className={styles.formGroup}>
         <label htmlFor="lenderName">Lender Name</label>
         <input
@@ -104,7 +119,6 @@ const LoanForm = ({ onClose }) => {
             <option value="GBP">GBP</option>
             <option value="JPY">JPY</option>
             <option value="CAD">CAD</option>
-            {/* Add other currencies as needed */}
           </select>
         </div>
       </div>
@@ -147,12 +161,11 @@ const LoanForm = ({ onClose }) => {
       {/* Form Actions */}
       <div className={styles.formActions}>
         <button type="submit" className={styles.submitButton}>
-          Save Loan
+          {submitButtonText}
         </button>
         <button 
           type="button" 
           className={styles.cancelButton}
-          // 5. Call onClose() on cancel
           onClick={onClose}
         >
           Cancel

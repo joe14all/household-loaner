@@ -9,8 +9,9 @@ export const formatCurrency = (amount, currencyCode = "USD") => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currencyCode,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      // --- FIX: REMOVED THE FOLLOWING TWO LINES ---
+      // minimumFractionDigits: 2,
+      // maximumFractionDigits: 2,
     }).format(amount);
   } catch (err) {
     // Fallback for invalid currency code
@@ -18,8 +19,9 @@ export const formatCurrency = (amount, currencyCode = "USD") => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      // --- FIX: ALSO REMOVED HERE FOR CONSISTENCY ---
+      // minimumFractionDigits: 2,
+      // maximumFractionDigits: 2,
     }).format(amount);
   }
 };
